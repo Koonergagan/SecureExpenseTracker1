@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "696586933234",
+    "project_id": "expensetrac-7e9b3",
+    "storage_bucket": "expensetrac-7e9b3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:696586933234:android:f7ba96f635485fa02b516b",
+        "android_client_info": {
+          "package_name": "week11.st566236.finalproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDm8dlo6epiTK1KkGCpdHgNIXaSwFQox5A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
