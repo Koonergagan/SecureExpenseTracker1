@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "week11.st566236.finalproject"
-        minSdk = 35
+        minSdk = 30
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -40,9 +40,12 @@ android {
     buildFeatures {
         compose = true
     }
+    compileSdk = 36
+    buildToolsVersion = "36.1.0"
 }
 
 dependencies {
+    implementation("androidx.appcompat:appcompat:1.7.1")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -71,12 +74,20 @@ dependencies {
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
     implementation( "androidx.compose.material:material-icons-extended:1.5.0") // adjust version
-
+    implementation("com.google.android.material:material:1.10.0")
 
     // Compose Material3
    // implementation("androidx.compose.material3:material3:1.2.0")
 // Biometric API
-   // implementation("androidx.biometric:biometric:1.1.0")
+    implementation("androidx.biometric:biometric:1.1.0")
 // Compose runtime & activity
    // implementation("androidx.activity:activity-compose:1.9.0")
+    implementation("androidx.compose.material3:material3")
+
+    // Compose UI foundation
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+
+    // Activity Compose
+    implementation("androidx.activity:activity-compose:1.8.0")
 }

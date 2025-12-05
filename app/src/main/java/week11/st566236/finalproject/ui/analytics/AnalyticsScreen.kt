@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -42,11 +43,16 @@ import java.util.Date
 import java.util.Locale
 
 @Composable
+
 fun AnalyticsScreen(viewModel: ExpensesViewModel = viewModel()) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
         when (val resource = uiState.listResource) {
             is Resource.Loading -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -55,23 +61,51 @@ fun AnalyticsScreen(viewModel: ExpensesViewModel = viewModel()) {
             }
             is Resource.Error -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text("Error: ${resource.message}")
+                    Text("Error: ${resource.message}", color = androidx.compose.ui.graphics.Color.Red)
                 }
             }
             is Resource.Success -> {
                 val expenses = resource.data
                 if (expenses.isEmpty()) {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text("No expenses to show")
+                        Text("No expenses to show", style = MaterialTheme.typography.bodyLarge)
                     }
                 } else {
-                    // Pie chart for categories
-                    PieChartView(expenses)
+                    // Pie chart inside a card
+                    androidx.compose.material3.Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+                        elevation = androidx.compose.material3.CardDefaults.cardElevation(8.dp)
+                    ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Text(
+                                text = "Spending by Category",
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            PieChartView(expenses)
+                        }
+                    }
 
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Bar chart for last 7 days
-                    WeeklyBarChart(expenses)
+                    // Bar chart inside a card
+                    androidx.compose.material3.Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+                        elevation = androidx.compose.material3.CardDefaults.cardElevation(8.dp)
+                    ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Text(
+                                text = "Last 7 Days Spending",
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            WeeklyBarChart(expenses)
+                        }
+                    }
                 }
             }
         }
@@ -92,17 +126,18 @@ fun PieChartView(expenses: List<Expense>) {
             PieChart(context).apply {
                 description.isEnabled = false
                 isRotationEnabled = true
+                setUsePercentValues(true)
                 legend.isEnabled = true
             }
         },
         update = { pieChart ->
             val dataSet = PieDataSet(pieEntries, "").apply {
                 colors = listOf(
-                    Color.rgb(244, 67, 54),
-                    Color.rgb(33, 150, 243),
-                    Color.rgb(76, 175, 80),
-                    Color.rgb(255, 193, 7),
-                    Color.rgb(156, 39, 176)
+                    android.graphics.Color.rgb(244, 67, 54),
+                    android.graphics.Color.rgb(33, 150, 243),
+                    android.graphics.Color.rgb(76, 175, 80),
+                    android.graphics.Color.rgb(255, 193, 7),
+                    android.graphics.Color.rgb(156, 39, 176)
                 )
                 valueTextSize = 14f
             }
@@ -112,15 +147,12 @@ fun PieChartView(expenses: List<Expense>) {
         modifier = Modifier
             .fillMaxWidth()
             .height(300.dp)
-            .padding(16.dp)
     )
 }
 
 @Composable
 fun WeeklyBarChart(expenses: List<Expense>) {
     val context = LocalContext.current
-
-    // Calculate total spent per day for the last 7 days
     val calendar = Calendar.getInstance()
     val today = calendar.timeInMillis
     val sevenDaysAgo = today - 6 * 24 * 60 * 60 * 1000L
@@ -133,7 +165,7 @@ fun WeeklyBarChart(expenses: List<Expense>) {
 
     val daysLabels = (0..6).map { dayOffset ->
         calendar.timeInMillis = sevenDaysAgo + dayOffset * 24 * 60 * 60 * 1000L
-        SimpleDateFormat("EEE", Locale.getDefault()).format(calendar.time) // Mon, Tue, etc.
+        SimpleDateFormat("EEE", Locale.getDefault()).format(calendar.time)
     }
 
     val entries = dailyTotals.mapIndexed { index, value -> BarEntry(index.toFloat(), value) }
@@ -148,8 +180,8 @@ fun WeeklyBarChart(expenses: List<Expense>) {
 
                 axisRight.isEnabled = false
                 axisLeft.setDrawGridLines(false)
-                axisLeft.axisLineColor = Color.BLACK
-                axisLeft.textColor = Color.BLACK
+                axisLeft.axisLineColor = android.graphics.Color.BLACK
+                axisLeft.textColor = android.graphics.Color.BLACK
                 axisLeft.textSize = 12f
 
                 xAxis.apply {
@@ -157,7 +189,7 @@ fun WeeklyBarChart(expenses: List<Expense>) {
                     setDrawGridLines(false)
                     valueFormatter = IndexAxisValueFormatter(daysLabels)
                     granularity = 1f
-                    textColor = Color.BLACK
+                    textColor = android.graphics.Color.BLACK
                     textSize = 12f
                 }
 
@@ -167,9 +199,9 @@ fun WeeklyBarChart(expenses: List<Expense>) {
         },
         update = { chart ->
             val dataSet = BarDataSet(entries, "").apply {
-                color = Color.rgb(33, 150, 243) // modern accent color
+                color = android.graphics.Color.rgb(33, 150, 243)
                 valueTextSize = 12f
-                valueTextColor = Color.BLACK
+                valueTextColor = android.graphics.Color.BLACK
             }
             chart.data = BarData(dataSet).apply { barWidth = 0.5f }
             chart.invalidate()
@@ -177,6 +209,5 @@ fun WeeklyBarChart(expenses: List<Expense>) {
         modifier = Modifier
             .fillMaxWidth()
             .height(300.dp)
-            .padding(16.dp)
     )
 }

@@ -32,24 +32,60 @@ fun ExpenseItemRow(
     onEdit: (Expense) -> Unit = {},
     onDelete: (String) -> Unit
 ) {
-    Row(
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(12.dp)
+            .padding(vertical = 6.dp, horizontal = 0.dp),
+        shape = RoundedCornerShape(12.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        )
     ) {
-        Column {
-            Text(expense.title, style = MaterialTheme.typography.bodyLarge)
-            Text("Amount: \$${expense.amount}")
-            Text("Category: ${expense.category}")
-            Text("Date: ${SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(expense.date))}")
-        }
-
-        Row {
-            IconButton(onClick = { onEdit(expense) }) {
-                Icon(Icons.Default.Edit, contentDescription = "Edit")
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                Text(
+                    text = expense.title,
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                    )
+                )
+                Text(
+                    text = "Amount: \$${expense.amount}",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Text(
+                    text = "Category: ${expense.category}",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Text(
+                    text = "Date: ${SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(expense.date))}",
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
-            IconButton(onClick = { onDelete(expense.id) }) {
-                Icon(Icons.Default.Delete, contentDescription = "Delete")
+
+            Row {
+                IconButton(onClick = { onEdit(expense) }) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = "Edit",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+                IconButton(onClick = { onDelete(expense.id) }) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete",
+                        tint = MaterialTheme.colorScheme.error
+                    )
+                }
             }
         }
     }

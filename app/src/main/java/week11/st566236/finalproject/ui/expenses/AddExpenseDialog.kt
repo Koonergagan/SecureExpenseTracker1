@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -16,6 +17,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -43,31 +45,49 @@ fun AddExpenseDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Add Expense") },
+        title = {
+            Text(
+                text = "Add Expense",
+                style = MaterialTheme.typography.headlineSmall.copy(
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                )
+            )
+        },
         text = {
-            Column {
+            Column(modifier = Modifier.fillMaxWidth()) {
+
+                // Title input
                 TextField(
                     value = title,
                     onValueChange = { title = it },
                     placeholder = { Text("Title") },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                    singleLine = true
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
+                // Amount input
                 TextField(
                     value = amount,
                     onValueChange = { amount = it },
                     placeholder = { Text("Amount") },
                     keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                    singleLine = true
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
+                // Category dropdown
                 ExposedDropdownMenuBox(
                     expanded = expanded,
-                    onExpandedChange = { expanded = !expanded }
+                    onExpandedChange = { expanded = !expanded },
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     TextField(
                         value = selectedCategory.name,
@@ -75,7 +95,8 @@ fun AddExpenseDialog(
                         readOnly = true,
                         label = { Text("Category") },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                        modifier = Modifier.fillMaxWidth() // <- just fill width
+                        modifier = Modifier
+                            .fillMaxWidth()
                             .menuAnchor()
                     )
                     ExposedDropdownMenu(
@@ -104,13 +125,19 @@ fun AddExpenseDialog(
                         amount = ""
                         selectedCategory = ExpenseCategory.Other
                     }
-                }
+                },
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
             ) {
                 Text("Save")
             }
         },
         dismissButton = {
-            Button(onClick = onDismiss) { Text("Cancel") }
+            Button(
+                onClick = onDismiss,
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
+            ) {
+                Text("Cancel")
+            }
         }
     )
 }
